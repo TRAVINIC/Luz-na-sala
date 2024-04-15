@@ -1,0 +1,65 @@
+/*Incluir biblioteca do sensor ultrassônico.*/
+#include "Ultrasonic.h"
+
+/*Portas dos componentes no arduino.*/
+const int Pino_Echo=6;
+const int Pino_Trig=7;
+int Lampada1 = 13;
+int rele1 = 8;
+
+/* Instanciar o objeto "ecolocalizacao" e vincular à biblioteca.*/
+Ultrasonic ecolocalizacao(Pino_Trig, Pino_Echo);
+
+#define distancia_cm 45 
+/* Limitar a distância máxima que o sensor capta.*/
+
+int distancia_Atual;
+
+void setup(){
+  /*Definir o estado das portas digitais (entrada ou saída).*/
+  
+  /* portas de entrada e saida sensor de distancia */
+  pinMode(Pino_Echo, INPUT);
+  pinMode(Pino_Trig, OUTPUT);
+  
+  
+  /* portas de entrada e lampada e rele que deve iniciar junto */
+  pinMode(Lampada1, OUTPUT);
+  pinMode(rele1, OUTPUT);
+}
+void loop(){
+  sensor();
+  
+/*Se distancia_Atual for menor que "distancia_cm" que é 45cm a luz liga, mas se a distancia_Atual for maior que "distancia_cm lida" que é 45cm a luz apaga*/
+ 
+  /*luz e rele liga distancia for menor*/
+  if (distancia_Atual<=distancia_cm) 
+  {
+        digitalWrite(Lapada1,HIGH);
+        digitalWrite(rele1,HIGH);
+        Serial.println("Luz da sala acesa");
+        delay(100);
+    }
+        
+  /*luz e rele desliga se distancia maior*/
+ if (distancia_Atual>=distancia_cm) 
+  {
+    digitalWrite(Lampada1,LOW);
+        digitalWrite(Lele1, LOW);
+        Serial.println("Luz da sala apagada");
+        delay(100);
+        }
+}
+
+
+void sensor()
+{
+  digitalWrite(Pino_Trig, LOW);
+  delayMicroseconds(2);
+  digitalWrite(Pino_Trig, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(Pino_Trig, LOW);
+  distancia_Atual= (ecolocalizacao.read(CM));
+  /*A função "Ranging(CM)" serve para ler a distância.*/
+  delay(15);
+}
